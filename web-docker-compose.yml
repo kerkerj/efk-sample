@@ -1,0 +1,15 @@
+version: '2'
+services:
+  web:
+    image: httpd:2.4
+    # hostname: web
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/usr/local/apache2/htdocs/
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: httpd.access
+
