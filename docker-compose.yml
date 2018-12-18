@@ -61,6 +61,7 @@ services:
   kibana:
     # https://www.elastic.co/guide/en/kibana/current/docker.html<Paste>
     image: docker.elastic.co/kibana/kibana:6.5.3
+    container_name: kibana
     # volumes:
     #   - ${pwd}/kibana.yml:/usr/share/kibana/config/kibana.yml
     environment:
@@ -74,6 +75,7 @@ services:
     # https://hub.docker.com/r/fluent/fluentd/
     # https://docs.fluentd.org/v0.12/articles/docker-logging-efk-compose
     # image: fluent/fluentd:v1.3
+    container_name: fluentd
     build: ./fluentd
     links:
       - "elasticsearch"
