@@ -1,5 +1,75 @@
 version: '3'
 services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.3
+    container_name: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.3
+    container_name: elasticsearch2
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./esdata2:/usr/share/elasticsearch/data
+  elasticsearch3:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.3
+    container_name: elasticsearch3
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./esdata3:/usr/share/elasticsearch/data
+
+  # single-node
+  # elasticsearch:
+  #   # https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:6.5.3
+  #   expose:
+  #     - 9200
+  #     - 9300
+  #   ports:
+  #     - "9200:9200"
+  #     - "9300:9300"
+  #   environment:
+  #     - "discovery.type=single-node"
+
+  kibana:
+    # https://www.elastic.co/guide/en/kibana/current/docker.html<Paste>
+    image: docker.elastic.co/kibana/kibana:6.5.3
+    # volumes:
+    #   - ${pwd}/kibana.yml:/usr/share/kibana/config/kibana.yml
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    links:
+      - "elasticsearch"
+    ports:
+      - "5601:5601"
+
   fluentd:
     # https://hub.docker.com/r/fluent/fluentd/
     # https://docs.fluentd.org/v0.12/articles/docker-logging-efk-compose
@@ -16,24 +86,3 @@ services:
       - "24224:24224"
       - "24224:24224/udp"
 
-  elasticsearch:
-    # https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.3
-    expose:
-      - 9200
-      - 9300
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    environment:
-      - "discovery.type=single-node"
-
-  kibana:
-    # https://www.elastic.co/guide/en/kibana/current/docker.html<Paste>
-    image: docker.elastic.co/kibana/kibana:6.5.3
-    # volumes:
-    #   - ${pwd}/kibana.yml:/usr/share/kibana/config/kibana.yml
-    links:
-      - "elasticsearch"
-    ports:
-      - "5601:5601"
