@@ -3,6 +3,7 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.3
     container_name: elasticsearch
+    restart: always
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
@@ -19,6 +20,7 @@ services:
   elasticsearch2:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.3
     container_name: elasticsearch2
+    restart: always
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
@@ -33,6 +35,7 @@ services:
   elasticsearch3:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.3
     container_name: elasticsearch3
+    restart: always
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
@@ -62,6 +65,7 @@ services:
     # https://www.elastic.co/guide/en/kibana/current/docker.html<Paste>
     image: docker.elastic.co/kibana/kibana:6.5.3
     container_name: kibana
+    restart: always
     # volumes:
     #   - ${pwd}/kibana.yml:/usr/share/kibana/config/kibana.yml
     environment:
@@ -76,6 +80,7 @@ services:
     # https://docs.fluentd.org/v0.12/articles/docker-logging-efk-compose
     # image: fluent/fluentd:v1.3
     container_name: fluentd
+    restart: always
     build: ./fluentd
     links:
       - "elasticsearch"
